@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="剥洋葱：从RT-Thread的串口到内核对象
+　　写在前面：如何阅读和学习一个较大的工程，每个人都有不同的方法。我倾向于首先“不求甚解”地使用API，将整个工程跑起来，对该工程建立一个整体的认识，然后在使用中，从最感兴趣的模块入手，从上层开始，像剥洋葱一样，逐层分析。本文就是按照这样的方法，为研究一">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="bupleurum">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="剥洋葱：从RT-Thread的串口到内核对象"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="柴胡的记事本"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+        <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>剥洋葱：从RT-Thread的串口到内核对象 - 柴胡的记事本</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Google Analytics -->
+    
+
+
+    <!-- favicon -->
+    
+
+	
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">bupleurum's blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('/h57.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>剥洋葱：从RT-Thread的串口到内核对象</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        
+                            2018-01-04
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h1 id="剥洋葱：从RT-Thread的串口到内核对象"><a href="#剥洋葱：从RT-Thread的串口到内核对象" class="headerlink" title="剥洋葱：从RT-Thread的串口到内核对象"></a>剥洋葱：从RT-Thread的串口到内核对象</h1><hr>
+<p>　　<em>写在前面：如何阅读和学习一个较大的工程，每个人都有不同的方法。我倾向于首先“不求甚解”地使用API，将整个工程跑起来，对该工程建立一个整体的认识，然后在使用中，从最感兴趣的模块入手，从上层开始，像剥洋葱一样，逐层分析。本文就是按照这样的方法，为研究一个小功能，从RT-Thread 中bsp的串口开始，最终深入到RT-Thread的内核，初步探究内核中的基本元素——内核对象。由于作者手中只有stm32f103的开发板，所以本文在涉及到bsp的代码部分，都是指RT-Thread的github仓库中最新的bsp/stm32f10x内的代码。</em></p>
+<p>　　使用RT-Thread的第一步就是通过ENV工具和scons来构建一个工程。我们可以看到在rtconfig.h中，RT-Thread通过一个宏<code>RT_CONSOLE_DEVICE_NAME</code>（在stm32f10x内，其默认值为<code>“uart1”</code>），就可以完成console所使用串口的设置。这个宏本质就是一个字符串，也就是串口的名字，将这个宏修改为<code>“uart1”</code>，console就会使用串口1。RT-Thread是如何通过串口的名字就可以实际在硬件上控制该串口了呢？</p>
+<p>　　在stm32f10x的bsp中，main函数内的<code>rtthread_startup()</code>将会完成RT-Thread的初始化。根据代码，整理出与我们此次研究有关的代码层次结构图，如下图所示，在该图中，下级表示被上级调用的子函数，同级之间表示并列关系，即同级的函数都是被上级函数所调用的子函数。<br>　　<img src="\img\main （startup.c）.png" alt="main （startup.c）"></p>
+<p>　　根据上图，我们可以推断出在<code>rt_hw_usart_init</code>中，就完成了字符串（即串口名称）与硬件串口的绑定，所以在接下来调用<code>rt_console_set_device</code>时，就可以直接通过<code>RT_CONSOLE_DEVICE_NAME</code>使用该串口。</p>
+<p>　　下面我们先分析<code>rt_hw_usart_init</code>，其中核心代码的调用结构如下图所示：<br>　　<img src="\img\rt_hw_usart_init.png" alt="rt_hw_usart_init"></p>
+<p>　　串口设备数据结构如下图所示。<br>　　<img src="\img\struct rt_serial_device.png" alt="struct rt_serial_device"></p>
+<p>　　从调用层次和串口设备的数据结构中可以发现，RT-Thread将串口封装成一个结构体，其名字（<code>char *name</code>，在stm32f10x中，uart1的名字为<code>“uart1”</code>）最终赋值给结构体子成员的<code>rt_object parent</code>的name数组中。</p>
+<p>　　根据上述分析，当<code>rt_hw_usart_init</code>运行完毕后，串口设备就被注册至内核了。实际上，只是串口设备的“孙”成员（子成员的子成员）<code>rt_object parent</code>，被注册到了内核中。而所谓注册到内核，就是指内核将其地址存入一个链表中。为什么只需要注册其中一个成员呢？这里运用了一个C语言的小技巧，即结构体首个成员的地址就是该结构体的地址，所以当我们获取到了结构体首个成员的地址时，也就相当于我们获取到了该结构体的地址。</p>
+<p>　　下面我们分析<code>rt_console_set_device</code>，其核心代码调用结构如下图所示：<br>　　<img src="\img\rt_console_set_device.png" alt="rt_console_set_device"><br>　　<br>　　其代码如下所示：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">rt_device_t</span> rt_console_set_device(<span class="keyword">const</span> <span class="keyword">char</span> *name)</div><div class="line">&#123;</div><div class="line">    <span class="keyword">rt_device_t</span> <span class="keyword">new</span>, old;</div><div class="line"></div><div class="line">    <span class="comment">/* save old device */</span></div><div class="line">    old = _console_device;</div><div class="line">    </div><div class="line">    <span class="comment">/* find new console device */</span></div><div class="line">    <span class="keyword">new</span> = rt_device_find(name);</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">new</span> != RT_NULL)</div><div class="line">    &#123;</div><div class="line">        <span class="keyword">if</span> (_console_device != RT_NULL)</div><div class="line">        &#123;</div><div class="line">            <span class="comment">/* close old console device */</span></div><div class="line">            rt_device_close(_console_device);</div><div class="line">        &#125;</div><div class="line">    </div><div class="line">        <span class="comment">/* set new console device */</span></div><div class="line">        rt_device_open(<span class="keyword">new</span>, RT_DEVICE_OFLAG_RDWR | RT_DEVICE_FLAG_STREAM);</div><div class="line">        _console_device = <span class="keyword">new</span>;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> old;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>　　与我们之前的分析一致。<code>rt_console_set_device</code>中维护了一个全局变量<code>_console_device</code>，保存console所使用的串口设备句柄（即串口设备结构体指针）。通过<code>rt_device_find</code>遍历内核中相应的链表，匹配与传入的字符串名称(<code>char *name</code>，在stm32f10x中，默认传入为<code>“uart1”</code>)一致的对象，即可获取到相应的句柄，将其赋值给<code>_console_device</code>，然后console模块就可以通过<code>_console_device</code>控制和使用该串口了。<br>　　<br>　　至此，RT-Thread通过名字就可以控制实际的硬件设备的原理已分析完毕。可以看出，RT-Thread通过分层和对象化思想，将串口封装成了<code>串口</code>——》<code>rt_device</code>——》<code>rt_object</code>的关系，在RT-Thread内核的其他模块中，我们也能大量的发现<code>rt_object</code>和<code>rt_device</code>的身影，这样的封装形式极大的提高了代码的复用率，在RT-Thread中，其派生关系如下图所示。本文分析的串口设备就是一种字符设备。<br>　　<img src="\img\派生关系.png" alt="派生关系"></p>
+<p>　　<em>后记：C语言的对象化和分层思想并不是为了“炫技”和模仿C++，而是为了用最少的代码干最多的事儿，并且减少耦合，更利于大规模的多人开发。Linux、RT-Thread以及其他大的C语言项目中，都运用了这种思想。不论使用什么语言做程序设计，这种思想都是开发大工程的一种最优解（当然这句话在目前“函数式编程”蓬勃发展的情况下显得比较主观）。在阅读优秀的代码时，相比于读懂具体的代码实现，我认为弄清楚为什么要这样实现反而更重要。</em></p>
+<hr>
+<font size="1">本文已被RT-Thread官方公众号“RTThread物联网操作系统”审核通过并发布。</font> 
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+
+
+
+
+    <hr />
+    <div id="gitalk-container"></div>
+    </div>
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script type="text/javascript">
+        var gitalk = new Gitalk({
+            clientID: 'b816e0222818d54c5eef',
+            clientSecret: '6b28fac33f6aa27203f68a5b9a4afbdb050c2515',
+            repo: 'comments',
+            owner: 'bupleurum',
+            admin: ['bupleurum'],
+            distractionFreeMode: true
+        })
+        gitalk.render('gitalk-container');
+    </script>
+
+
+
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr />
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+                        <li>
+                            <a href="https://github.com/bupleurum" target="_blank">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    
+
+                    
+
+                    
+                        <li>
+                            <a href="mailto:bupleurum@outlook.com" target="_blank">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2018 bupleurum<br></p>
+                <!-- 
+                <p class="copyright text-muted">Original Theme <a target="_blank" href="http://startbootstrap.com/template-overviews/clean-blog/">Clean Blog</a> from <a href="http://startbootstrap.com/" target="_blank">Start Bootstrap</a></p>
+                <p class="copyright text-muted">Adapted for <a target="_blank" href="https://hexo.io/">Hexo</a> by <a href="http://www.codeblocq.com/" target="_blank">Jonathan Klughertz</a></p> 
+                -->
+                <p class="copyright text-muted"> 由 <a target="_blank" href="https://hexo.io/">Hexo</a> 和 <a href="https://github.com/klugjo/hexo-theme-clean-blog">Clean blog</a> 强力驱动</p> 
+                <p class="copyright text-muted">本站总访问量 <span id="busuanzi_value_site_pv"></span> 次, 访客数 <span id="busuanzi_value_site_uv"></span> 人次, 本页总阅读量 <span id="busuanzi_value_page_pv"></span> 次</p>
+            </div>
+        </div>
+    </div>
+</footer>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <!-- After footer scripts -->
+    
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

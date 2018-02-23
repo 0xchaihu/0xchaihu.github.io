@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="从RT-Thread中我们能学到什么？
+　　本文将为大家简要介绍一下笔者使用和学习RT-Thread过程中的体会和感悟，希望能帮助初识RT-Thread的人建立一个初步的印象，避免产生入宝山而空回的遗憾。笔者水平有限，目前也正在学习和使用RT-Thread的过程中，希望本文的拙见能抛砖引玉，如有纰漏">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="bupleurum">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="从RT-Thread中我们能学到什么？"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="柴胡的记事本"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+        <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>从RT-Thread中我们能学到什么？ - 柴胡的记事本</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Google Analytics -->
+    
+
+
+    <!-- favicon -->
+    
+
+	
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">bupleurum's blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('/h57.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>从RT-Thread中我们能学到什么？</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        
+                            2017-09-02
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h1 id="从RT-Thread中我们能学到什么？"><a href="#从RT-Thread中我们能学到什么？" class="headerlink" title="从RT-Thread中我们能学到什么？"></a>从RT-Thread中我们能学到什么？</h1><hr>
+<p>　　本文将为大家简要介绍一下笔者使用和学习RT-Thread过程中的体会和感悟，希望能帮助初识RT-Thread的人建立一个初步的印象，避免产生入宝山而空回的遗憾。笔者水平有限，目前也正在学习和使用RT-Thread的过程中，希望本文的拙见能抛砖引玉，如有纰漏，还请不吝赐教。</p>
+<p>　　现在是一个快节奏的时代，技术领域也是如此。近些年，IoT备受资本青睐，各种新技术新方案层出不穷，质量也参差不齐，这边唱罢那边登台，以至于有些技术还未被人熟知，就被淹没在长河中了。</p>
+<p>　　客观的说，RTOS领域玩家众多，仅笔者短短的从业时间，国产RTOS就听闻了五、六款之多。</p>
+<p>　　RT-Thread作为一个有十余年历史的国产RTOS，经历了长时间的考验和用户的青睐，目前发展趋势蒸蒸日上，也即将发布RT-Thread 3.0，其中必然有值得我们思考和学习的地方，我们也可以从中汲取到不少宝贵的经验。</p>
+<h2 id="软件工程管理"><a href="#软件工程管理" class="headerlink" title="软件工程管理"></a>软件工程管理</h2><p>　　软件工程管理对于软件研发是十分重要的，甚至可以说是开发过程的基石。公司中有高水平的嵌入式软件程序员，也有刚入职的实习生，水平难免参差不齐，当共同协作开发一个项目时，如何彼此协调也是一个难题。</p>
+<p>　　时至今日，很多公司仍然在使用落后的代码管理方式。有些甚至使用把代码压缩成一个个的压缩包来做版本管理。同事之间的协作依靠互相发送文件，每次接收到同事的新文件首先要花半天时间解决编译error，甚至还要在本地对同事的代码进行修改，这样，软件基本处在半失控的状态，某次改动产生问题，就要从浩瀚的压缩包海洋里挑选一个，进行版本回退。在开发一个大项目的时候，这种情况下甚至会出现人数越多，开发难度和周期越大的情况。</p>
+<p>　　而RT-Thread，提供了一个教科书级的范例。</p>
+<p>　　RT-Thread由13000多个文件构成，支持各类设备和芯片近70款，从代码量和组织方式上来说，是一个相当庞大的软件工程。在近十年的时间里，至少有将近100个开发者参与到了RT-Thread的开发中，使得RT-Thread稳步迭代，而这也是有一定的维护难度的。</p>
+<p>　　RT-Thread将代码部署在Github上，并在此基础上使用了Travis CI进行自动化编译测试，使得开发者可以有条不紊的进行迭代开发，并将自己的成果提交至master分支，在提交代码的第一时间通过Travis CI进行自动化编译测试，使得一些无法编译通过的问题，在第一时间就被发现。</p>
+<p>　　使用scons自动化代码构建工具。初识RT-Thread，很难想象RT-Thread通过一个代码仓库，对近70个芯片的IAR、MDK和GCC的工程和工具链提供支持。RT-Thread使用了scons，使得只要敲几行指令，就可以生成所需环境和工具链的对应的工程。也就是说，对于大多数芯片，所谓移植RT-Thread，只需要几个scons指令进行自动化构建。</p>
+<p>　　我相信对于大多数中小公司的软件项目，无论从规模还是参与人数都没有RT-Thread这么庞大，维护难度也小于RT-Thread。但尽管如此，工程维护也是软件工程管理的老大难问题，无疑，从RT-Thread中，我们可以借鉴不少经验。</p>
+<h2 id="代码风格与技术"><a href="#代码风格与技术" class="headerlink" title="代码风格与技术"></a>代码风格与技术</h2><p>　　RT-Thread的代码风格是十分优秀的。</p>
+<p>　　在工作中，很多时候嵌入式软件工程师尤其是单片机软件工程师使用的芯片资源相对比较匮乏，RAM和ROM也略显局促，节省资源也成了优先级比较高的事情。而这也成了许多工程师代码不规范的借口。</p>
+<p>　　鲁棒性、模块化、可拓展、高内聚、低耦合，这种高大上的名词总是不绝于耳，相信大家也在各种场景下听过不少次。可抛去这些高大上的名词，到底什么才是优秀的代码呢？</p>
+<p>　　RT-Thread虽然没有强调过这些高大上的名词，但是他毫无疑问用代码对这些名词进行了解释。</p>
+<p>　　RT-Thread的代码风格是类Linux/Unix的代码风格。这种风格不仅仅体现在函数、变量的命名规范，而是深入到了RT-Thread的核心。</p>
+<p>　　例如，RT-Thread实现了一个设备驱动框架，将设备类型分为了字符设备、块设备、网络接口设备、内存设备、CAN设备、RTC设备、声音设备、图形设备、I2C总线设备等等等等。初始化时通过字符串（用户可自定义的一个易于记忆的名称）与设备驱动绑定，并将驱动注册到内核，使用时只需调用一个字符串，即可匹配到该设备，无需通过各种头文件包含和二次封装，即可实现隔离和解耦。</p>
+<p>　　RT-Thread提供了finsh和msh组件，可以在调试和开发中进行便捷的交互。</p>
+<p>　　如何在资源紧缺的嵌入式软件开发中，写出优秀的代码，RT-Thread十分值得我们思考和学习。</p>
+<h2 id="开源精神"><a href="#开源精神" class="headerlink" title="开源精神"></a>开源精神</h2><p>　　RT-Thread是国内第一梯队的嵌入式开源项目，也正因为开源和社区化，RT-Thread得以茁壮发展，并在开发人员中赢得了极高的口碑，有不小数量的开发者参与到了RT-Thread的开发中。RT-Thread实时操作系统遵循GPLv2+许可证，实时操作系统内核及所有开源组件可以免费在商业产品中使用，不需要公布应用源码，没有任何潜在商业风险。</p>
+<p>　　这种开源精神十分令人钦佩。</p>
+<p>　　得益于RT-Thread的开源，我们可以将自己的代码提交，经过审核后合并至master分支，在使用过程中，当某个模块出现疑问或问题，可以直接与开发者甚至创始人直接进行讨论，这种体验是十分奇妙，也是其他RTOS所不具备的。</p>
+<p>　　RT-Thread倡导大家参与RT-Thread开发的代码编写、bug修复、文档完善等等各项进程中。而实际上一旦自己提交的东西被采纳和合并，也是一件十分有成就感的事情。</p>
+<p>　　我们也可以学习RT-Thread的开源精神，将自己业余时间的代码开源，或者积极参与到开源项目中，在方便大家使用的同时，通过进行更广泛的讨论，也相当于有了更多的人帮助review，接受大家的批评和建议，实现自己更快的进步。</p>
+<h2 id="一些思考"><a href="#一些思考" class="headerlink" title="一些思考"></a>一些思考</h2><p>　　现在大家都十分渴望成功，并且渴望快速成功。</p>
+<p>　　在各种融资奇迹下，渐渐地，大家希望，趁着风口，激进地在短时间内完成一款产品，然后借着风口一飞冲天。也渐渐地，失去了精心打磨耕耘一个产品的耐心。</p>
+<p>　　RT-Thread在数千万装机量和获得天使轮近千万融资的背后是十年如一日的细心耕耘和精心呵护。</p>
+<p>　　RT-Thread的创始人熊谱翔先生，起初是在2005年，面对RTOS现状，利用业余时间开发RT-Thread。我想熊谱翔先生的初心也仅仅是想做一款真正优秀的实时操作系统吧。</p>
+<p>　　如同《三傻大闹宝莱坞》中，兰彻达斯所说：“追求卓越，成功就会在不经意间追上你”。</p>
+<hr>
+<font size="1">本文已被RT-Thread官方公众号“RTThread物联网操作系统”审核通过并发布。</font> 
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+
+
+
+
+    <hr />
+    <div id="gitalk-container"></div>
+    </div>
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script type="text/javascript">
+        var gitalk = new Gitalk({
+            clientID: 'b816e0222818d54c5eef',
+            clientSecret: '6b28fac33f6aa27203f68a5b9a4afbdb050c2515',
+            repo: 'comments',
+            owner: 'bupleurum',
+            admin: ['bupleurum'],
+            distractionFreeMode: true
+        })
+        gitalk.render('gitalk-container');
+    </script>
+
+
+
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr />
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+                        <li>
+                            <a href="https://github.com/bupleurum" target="_blank">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    
+
+                    
+
+                    
+                        <li>
+                            <a href="mailto:bupleurum@outlook.com" target="_blank">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2018 bupleurum<br></p>
+                <!-- 
+                <p class="copyright text-muted">Original Theme <a target="_blank" href="http://startbootstrap.com/template-overviews/clean-blog/">Clean Blog</a> from <a href="http://startbootstrap.com/" target="_blank">Start Bootstrap</a></p>
+                <p class="copyright text-muted">Adapted for <a target="_blank" href="https://hexo.io/">Hexo</a> by <a href="http://www.codeblocq.com/" target="_blank">Jonathan Klughertz</a></p> 
+                -->
+                <p class="copyright text-muted"> 由 <a target="_blank" href="https://hexo.io/">Hexo</a> 和 <a href="https://github.com/klugjo/hexo-theme-clean-blog">Clean blog</a> 强力驱动</p> 
+                <p class="copyright text-muted">本站总访问量 <span id="busuanzi_value_site_pv"></span> 次, 访客数 <span id="busuanzi_value_site_uv"></span> 人次, 本页总阅读量 <span id="busuanzi_value_page_pv"></span> 次</p>
+            </div>
+        </div>
+    </div>
+</footer>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <!-- After footer scripts -->
+    
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>
