@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.18.5">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>从RT-Thread中我们能学到什么？ - 柴胡的记事本</title>
+
+  
+    <meta name="description" content="本文将为大家简要介绍一下笔者使用和学习RT-Thread过程中的体会和感悟，希望能帮助初识RT-Thread的人建立一个初步的印象，避免产生入宝山而空回的遗憾。笔者水平有限，目前也正在学习和使用RT-Thread的过程中，希望本文的拙见能抛砖引玉，如有纰漏，还请不吝赐教。 　　现在是一个快节奏的时代，技术领域也是如此。近些年，IoT备受资本青睐，各种新技术新方案层出不穷，质量也参差不齐，这边唱">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从RT-Thread中我们能学到什么？">
+<meta property="og:url" content="https://bupleurum.github.io/2017/09/02/%E4%BB%8ERT-Thread%E4%B8%AD%E6%88%91%E4%BB%AC%E8%83%BD%E5%AD%A6%E5%88%B0%E4%BB%80%E4%B9%88/index.html">
+<meta property="og:site_name" content="柴胡的记事本">
+<meta property="og:description" content="本文将为大家简要介绍一下笔者使用和学习RT-Thread过程中的体会和感悟，希望能帮助初识RT-Thread的人建立一个初步的印象，避免产生入宝山而空回的遗憾。笔者水平有限，目前也正在学习和使用RT-Thread的过程中，希望本文的拙见能抛砖引玉，如有纰漏，还请不吝赐教。 　　现在是一个快节奏的时代，技术领域也是如此。近些年，IoT备受资本青睐，各种新技术新方案层出不穷，质量也参差不齐，这边唱">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2017-09-02T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-01-15T13:03:21.433Z">
+<meta property="article:author" content="柴胡">
+<meta name="twitter:card" content="summary">
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="title" href="/"><div class="main" ff="title">柴胡的记事本</div><div class="sub normal cap">一个无聊的记事本</div><div class="sub hover cap" style="opacity:0">Just for fun.</div></a></div>
+
+<nav class="menu dis-select"></nav>
+</header>
+
+
+<div class="widgets">
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" data-filter="/blog/" placeholder="文章搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">No Results!</div></div></div></widget>
+
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">从RT-Thread中我们能学到什么？</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E7%AE%A1%E7%90%86"><span class="toc-text">软件工程管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC%E4%B8%8E%E6%8A%80%E6%9C%AF"><span class="toc-text">代码风格与技术</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E6%BA%90%E7%B2%BE%E7%A5%9E"><span class="toc-text">开源精神</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83"><span class="toc-text">一些思考</span></a></li></ol></div></div></widget>
+
+
+
+
+</div>
+
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a><span class="sep"></span><a class="cap breadcrumb" href="/">Blog</a></div><div id="post-meta">Posted on&nbsp;<time datetime="2017-09-02T00:00:00.000Z">2017-09-02</time></div></div>
+
+<article class='md-text content post'>
+<h1 class="article-title"><span>从RT-Thread中我们能学到什么？</span></h1>
+<p>　　本文将为大家简要介绍一下笔者使用和学习RT-Thread过程中的体会和感悟，希望能帮助初识RT-Thread的人建立一个初步的印象，避免产生入宝山而空回的遗憾。笔者水平有限，目前也正在学习和使用RT-Thread的过程中，希望本文的拙见能抛砖引玉，如有纰漏，还请不吝赐教。</p>
+<p>　　现在是一个快节奏的时代，技术领域也是如此。近些年，IoT备受资本青睐，各种新技术新方案层出不穷，质量也参差不齐，这边唱罢那边登台，以至于有些技术还未被人熟知，就被淹没在长河中了。</p>
+<p>　　客观的说，RTOS领域玩家众多，仅笔者短短的从业时间，国产RTOS就听闻了五、六款之多。</p>
+<p>　　RT-Thread作为一个有十余年历史的国产RTOS，经历了长时间的考验和用户的青睐，目前发展趋势蒸蒸日上，也即将发布RT-Thread 3.0，其中必然有值得我们思考和学习的地方，我们也可以从中汲取到不少宝贵的经验。</p>
+<h2 id="软件工程管理"><a href="#软件工程管理" class="headerlink" title="软件工程管理"></a>软件工程管理</h2><p>　　软件工程管理对于软件研发是十分重要的，甚至可以说是开发过程的基石。公司中有高水平的嵌入式软件程序员，也有刚入职的实习生，水平难免参差不齐，当共同协作开发一个项目时，如何彼此协调也是一个难题。</p>
+<p>　　时至今日，很多公司仍然在使用落后的代码管理方式。有些甚至使用把代码压缩成一个个的压缩包来做版本管理。同事之间的协作依靠互相发送文件，每次接收到同事的新文件首先要花半天时间解决编译error，甚至还要在本地对同事的代码进行修改，这样，软件基本处在半失控的状态，某次改动产生问题，就要从浩瀚的压缩包海洋里挑选一个，进行版本回退。在开发一个大项目的时候，这种情况下甚至会出现人数越多，开发难度和周期越大的情况。</p>
+<p>　　而RT-Thread，提供了一个教科书级的范例。</p>
+<p>　　RT-Thread由13000多个文件构成，支持各类设备和芯片近70款，从代码量和组织方式上来说，是一个相当庞大的软件工程。在近十年的时间里，至少有将近100个开发者参与到了RT-Thread的开发中，使得RT-Thread稳步迭代，而这也是有一定的维护难度的。</p>
+<p>　　RT-Thread将代码部署在Github上，并在此基础上使用了Travis CI进行自动化编译测试，使得开发者可以有条不紊的进行迭代开发，并将自己的成果提交至master分支，在提交代码的第一时间通过Travis CI进行自动化编译测试，使得一些无法编译通过的问题，在第一时间就被发现。</p>
+<p>　　使用scons自动化代码构建工具。初识RT-Thread，很难想象RT-Thread通过一个代码仓库，对近70个芯片的IAR、MDK和GCC的工程和工具链提供支持。RT-Thread使用了scons，使得只要敲几行指令，就可以生成所需环境和工具链的对应的工程。也就是说，对于大多数芯片，所谓移植RT-Thread，只需要几个scons指令进行自动化构建。</p>
+<p>　　我相信对于大多数中小公司的软件项目，无论从规模还是参与人数都没有RT-Thread这么庞大，维护难度也小于RT-Thread。但尽管如此，工程维护也是软件工程管理的老大难问题，无疑，从RT-Thread中，我们可以借鉴不少经验。</p>
+<h2 id="代码风格与技术"><a href="#代码风格与技术" class="headerlink" title="代码风格与技术"></a>代码风格与技术</h2><p>　　RT-Thread的代码风格是十分优秀的。</p>
+<p>　　在工作中，很多时候嵌入式软件工程师尤其是单片机软件工程师使用的芯片资源相对比较匮乏，RAM和ROM也略显局促，节省资源也成了优先级比较高的事情。而这也成了许多工程师代码不规范的借口。</p>
+<p>　　鲁棒性、模块化、可拓展、高内聚、低耦合，这种高大上的名词总是不绝于耳，相信大家也在各种场景下听过不少次。可抛去这些高大上的名词，到底什么才是优秀的代码呢？</p>
+<p>　　RT-Thread虽然没有强调过这些高大上的名词，但是他毫无疑问用代码对这些名词进行了解释。</p>
+<p>　　RT-Thread的代码风格是类Linux&#x2F;Unix的代码风格。这种风格不仅仅体现在函数、变量的命名规范，而是深入到了RT-Thread的核心。</p>
+<p>　　例如，RT-Thread实现了一个设备驱动框架，将设备类型分为了字符设备、块设备、网络接口设备、内存设备、CAN设备、RTC设备、声音设备、图形设备、I2C总线设备等等等等。初始化时通过字符串（用户可自定义的一个易于记忆的名称）与设备驱动绑定，并将驱动注册到内核，使用时只需调用一个字符串，即可匹配到该设备，无需通过各种头文件包含和二次封装，即可实现隔离和解耦。</p>
+<p>　　RT-Thread提供了finsh和msh组件，可以在调试和开发中进行便捷的交互。</p>
+<p>　　如何在资源紧缺的嵌入式软件开发中，写出优秀的代码，RT-Thread十分值得我们思考和学习。</p>
+<h2 id="开源精神"><a href="#开源精神" class="headerlink" title="开源精神"></a>开源精神</h2><p>　　RT-Thread是国内第一梯队的嵌入式开源项目，也正因为开源和社区化，RT-Thread得以茁壮发展，并在开发人员中赢得了极高的口碑，有不小数量的开发者参与到了RT-Thread的开发中。RT-Thread实时操作系统遵循GPLv2+许可证，实时操作系统内核及所有开源组件可以免费在商业产品中使用，不需要公布应用源码，没有任何潜在商业风险。</p>
+<p>　　这种开源精神十分令人钦佩。</p>
+<p>　　得益于RT-Thread的开源，我们可以将自己的代码提交，经过审核后合并至master分支，在使用过程中，当某个模块出现疑问或问题，可以直接与开发者甚至创始人直接进行讨论，这种体验是十分奇妙，也是其他RTOS所不具备的。</p>
+<p>　　RT-Thread倡导大家参与RT-Thread开发的代码编写、bug修复、文档完善等等各项进程中。而实际上一旦自己提交的东西被采纳和合并，也是一件十分有成就感的事情。</p>
+<p>　　我们也可以学习RT-Thread的开源精神，将自己业余时间的代码开源，或者积极参与到开源项目中，在方便大家使用的同时，通过进行更广泛的讨论，也相当于有了更多的人帮助review，接受大家的批评和建议，实现自己更快的进步。</p>
+<h2 id="一些思考"><a href="#一些思考" class="headerlink" title="一些思考"></a>一些思考</h2><p>　　现在大家都十分渴望成功，并且渴望快速成功。</p>
+<p>　　在各种融资奇迹下，渐渐地，大家希望，趁着风口，激进地在短时间内完成一款产品，然后借着风口一飞冲天。也渐渐地，失去了精心打磨耕耘一个产品的耐心。</p>
+<p>　　RT-Thread在数千万装机量和获得天使轮近千万融资的背后是十年如一日的细心耕耘和精心呵护。</p>
+<p>　　RT-Thread的创始人熊谱翔先生，起初是在2005年，面对RTOS现状，利用业余时间开发RT-Thread。我想熊谱翔先生的初心也仅仅是想做一款真正优秀的实时操作系统吧。</p>
+<p>　　如同《三傻大闹宝莱坞》中，兰彻达斯所说：“追求卓越，成功就会在不经意间追上你”。</p>
+<hr>
+<p><font size="1">本文已被RT-Thread官方公众号“RTThread物联网操作系统”审核通过并发布。</font> </p>
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>License</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Newer</div><a href="/2018/01/04/%E5%89%A5%E6%B4%8B%E8%91%B1_%E4%BB%8ERT-Thread%E7%9A%84%E4%B8%B2%E5%8F%A3%E5%88%B0%E5%86%85%E6%A0%B8%E5%AF%B9%E8%B1%A1/">剥洋葱：从RT-Thread的串口到内核对象</a></div><div class="item" id="next"><div class="note">Older</div><a href="/2017/05/23/Hello_World/">Hello World</a></div></section></div>
+
+
+
+
+
+
+  <div class='related-wrap md-text reveal' id="comments">
+    <section class='header cmt-title cap theme'>
+      Join the discussion
+    </section>
+    <section class='body cmt-body giscus'>
+      
+
+<svg class="loading" style="vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg>
+
+<div id="giscus" data-repo="bupleurum/comments" data-repo-id="MDEwOlJlcG9zaXRvcnkxMDMzODIxMjM=" data-category="Announcements" data-category-id="DIC_kwDOBil8a84CTmlu" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="preferred_color_scheme" data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous"></div>
+
+    </section>
+  </div>
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@柴胡</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.18.5';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.18.5';
+  stellar.config = {
+    date_suffix: {
+      just: 'Just',
+      min: 'minutes ago',
+      hour: 'hours ago',
+      day: 'days ago',
+      month: 'months ago',
+    },
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+  <script>
+  function loadJS() {
+    const els = document.querySelectorAll("#comments #giscus");
+    if (els.length === 0) return;
+    els.forEach((el, i) => {
+      try {
+        el.innerHTML = '';
+      } catch (error) {
+        console.log(error);
+      }
+      var script = document.createElement('script');
+      script.src = 'https://giscus.app/client.js';
+      script.async = true;
+      for (let key of Object.keys(el.attributes)) {
+        let attr = el.attributes[key];
+        if (['class', 'id'].includes(attr.name) === false) {
+          script.setAttribute(attr.name, attr.value);
+        }
+      }
+      el.appendChild(script);
+    });
+  }
+  window.addEventListener('DOMContentLoaded', (event) => {
+    loadJS();
+  });
+</script>
+
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>
