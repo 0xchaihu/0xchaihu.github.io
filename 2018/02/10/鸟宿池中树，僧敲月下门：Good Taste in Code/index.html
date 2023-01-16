@@ -31,7 +31,7 @@
 <meta property="og:description" content="作为一个程序员，按时完成业务需求是分内的责任，而作为工程师，我们也应当对代码有美的追求。　　　　Linus在2016年的TED中，举了一个小例子来说明代码品味的问题，C Style的伪代码如下： 12345678910111213141516171819202122remove_list_entry(entry)&amp;#123;    prev &#x3D; NULL;    walk &#x3D; head;">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2018-02-10T00:00:00.000Z">
-<meta property="article:modified_time" content="2023-01-16T15:45:50.038Z">
+<meta property="article:modified_time" content="2023-01-16T17:00:27.736Z">
 <meta property="article:author" content="柴胡">
 <meta name="twitter:card" content="summary">
   
@@ -289,8 +289,8 @@
 
   stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
   // optional plugins
-  if ('true' == 'true') {
-    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  if ('false' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":false,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
   }
   if ('true' == 'true') {
     stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});

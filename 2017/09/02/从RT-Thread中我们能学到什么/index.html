@@ -31,7 +31,7 @@
 <meta property="og:description" content="本文将为大家简要介绍一下笔者使用和学习RT-Thread过程中的体会和感悟，希望能帮助初识RT-Thread的人建立一个初步的印象，避免产生入宝山而空回的遗憾。笔者水平有限，目前也正在学习和使用RT-Thread的过程中，希望本文的拙见能抛砖引玉，如有纰漏，还请不吝赐教。 　　现在是一个快节奏的时代，技术领域也是如此。近些年，IoT备受资本青睐，各种新技术新方案层出不穷，质量也参差不齐，这边唱">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2017-09-02T00:00:00.000Z">
-<meta property="article:modified_time" content="2023-01-16T15:45:50.038Z">
+<meta property="article:modified_time" content="2023-01-16T17:00:27.736Z">
 <meta property="article:author" content="柴胡">
 <meta name="twitter:card" content="summary">
   
@@ -298,8 +298,8 @@
 
   stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
   // optional plugins
-  if ('true' == 'true') {
-    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  if ('false' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":false,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
   }
   if ('true' == 'true') {
     stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
